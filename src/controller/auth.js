@@ -149,7 +149,7 @@ class Auth {
     async verifyOTP(req, res) {
         const email = req.body.email;
         const OTP = req.body.OTP;
-
+console.log(email)
         try {
             const user = await User.findOne({ email: email });
 
@@ -220,7 +220,7 @@ class Auth {
 
     async changePassword(req, res) {
         try {
-            const user = await User.findOne({ username: req.body.username });
+            const user = await User.findOne({ email: req.body.email });
 
             if (!user) {
                 return res.status(200).json({
