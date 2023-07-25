@@ -167,7 +167,7 @@ class Auth {
                         "result": "failure",
                         "message": "Account is locked. Try it after a while."
                     });
-                  
+
                 } else {
                     user.isBlocked = false;
                     user.OTPAttempts = 0;
@@ -213,6 +213,32 @@ class Auth {
                 "message": "Successful confirmation"
             });
         } catch (err) {
+            console.log(err);
+            res.status(500).send("Server error");
+        }
+    }
+
+    async changePassword(req, res) {
+        try {
+            const user = await User.findOne({ username: req.body.username });
+
+            if (!user) {
+                return res.status(200).json({
+                    "result": "failure",
+                    "message": "Email is not registered"
+                }
+                );
+            }
+            const newPasswordHash = bcyrpt.hashSync(req.body.password, 10);
+            user.password = newPasswordHash;
+            await user.save();
+
+            return res.status(200).json({
+                "result": "success",
+                "message": "Password Changed Successfully"
+            }
+            );
+        } catch (error) {
             console.log(err);
             res.status(500).send("Server error");
         }
